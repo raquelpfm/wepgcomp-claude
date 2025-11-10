@@ -150,6 +150,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Implement specific permission checks based on role
       // This is a simplified version
+      // TODO: Implement permission-based checks using the permission parameter
+      void permission; // Currently unused, will be implemented later
       return false;
     },
     [user]

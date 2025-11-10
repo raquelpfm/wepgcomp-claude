@@ -245,7 +245,7 @@ export const RegisterPage: React.FC = () => {
               <Input
                 label="Matrícula UFBA"
                 placeholder="Ex: 202012345"
-                error={errors.matricula?.message}
+                error={(errors as any).matricula?.message}
                 required
                 {...register('matricula')}
               />
