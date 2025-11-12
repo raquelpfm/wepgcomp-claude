@@ -57,14 +57,34 @@ cd wepgcomp-frontend
 npm install
 ```
 
-3. Configure as variáveis de ambiente (opcional):
+3. Configure as variáveis de ambiente:
 
-Crie um arquivo `.env` na raiz do projeto:
+O projeto já vem com arquivo `.env` pré-configurado para **modo de demonstração com dados mockados**:
+
 ```env
+# API Configuration
 VITE_API_URL=http://localhost:4000/api
+
+# Mock Mode - ENABLED for testing without backend
+VITE_USE_MOCK_DATA=true
+
+# Mock Data Persistence
+VITE_MOCK_PERSISTENCE=false
+
+# Mock Network Delay (milliseconds)
+VITE_MOCK_DELAY=300
 ```
 
-Se não configurar, o sistema usará o padrão `http://localhost:4000/api`.
+**Para usar dados mockados (padrão - não requer backend):**
+```env
+VITE_USE_MOCK_DATA=true
+```
+
+**Para conectar a API real:**
+```env
+VITE_USE_MOCK_DATA=false
+VITE_API_URL=http://localhost:4000/api
+```
 
 ### Execução em Modo de Desenvolvimento
 
@@ -94,6 +114,81 @@ npm run preview
 npm run lint
 ```
 
+---
+
+## Demonstração com Dados Mockados
+
+O sistema possui uma **camada completa de dados mockados** que permite testar todas as funcionalidades sem necessidade de backend rodando.
+
+### Quick Start - Demonstração
+
+1. **Instale e inicie:**
+```bash
+npm install
+npm run dev
+```
+
+2. **Acesse:** `http://localhost:5173`
+
+3. **Faça login com um dos perfis de teste:**
+
+| Perfil | Email | Senha |
+|--------|-------|-------|
+| Super Admin | admin@ufba.br | Admin@123 |
+| Coordenador | coordenador@ufba.br | Coord@123 |
+| Professor | professor1@ufba.br | Prof@123 |
+| Doutorando | doutorando1@ufba.br | Dout@123 |
+| Ouvinte | ouvinte1@gmail.com | Ouvinte@123 |
+
+### Dados Disponíveis para Teste
+
+- **18 usuários** de teste com diferentes perfis e status
+- **V WEPGCOMP 2025** (edição ativa) + 1 edição anterior completa
+- **10 apresentações** cadastradas (8 agendadas, 2 pendentes)
+- **4 sessões** distribuídas em 2 dias
+- **3 salas** disponíveis
+- **12 votos** já registrados em algumas apresentações
+- **Rankings** calculados automaticamente
+- **Certificados** da edição anterior
+
+### Cenários de Teste Implementados
+
+✅ Login bloqueado para usuário pendente de aprovação
+✅ Aprovação de professor e login subsequente
+✅ Votação múltipla na mesma apresentação
+✅ Conflito de horário ao criar sessão
+✅ Sessão sem sala (bloqueia todas)
+✅ Reordenação de apresentações
+✅ Cálculo correto de ranking
+✅ Validação de upload de PDF
+
+### Documentação de Testes
+
+Para instruções detalhadas de como testar cada funcionalidade, consulte:
+
+📖 **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Guia completo com todos os cenários de teste
+
+### Alternando entre Mock e API Real
+
+**Modo Mock (padrão):**
+```env
+VITE_USE_MOCK_DATA=true
+```
+- ✅ Não requer backend
+- ✅ Dados completos para demonstração
+- ✅ Simula latência de rede realista
+- ✅ Logs informativos no console
+
+**Modo API Real:**
+```env
+VITE_USE_MOCK_DATA=false
+VITE_API_URL=http://localhost:4000/api
+```
+- Conecta ao backend real
+- Requer API rodando em `localhost:4000`
+
+---
+
 ## Estrutura de Pastas (Visão Geral)
 
 ```
@@ -114,7 +209,16 @@ wepgcomp-frontend/
 │   │   ├── user.service.ts # Endpoints de usuários
 │   │   ├── presentation.service.ts # Endpoints de apresentações
 │   │   ├── event.service.ts # Endpoints de eventos e sessões
-│   │   └── certificate.service.ts # Endpoints de certificados
+│   │   ├── certificate.service.ts # Endpoints de certificados
+│   │   ├── index.ts        # Exportação centralizada (auto-switch mock/real)
+│   │   └── mock/           # 🎭 Serviços e dados mockados para demonstração
+│   │       ├── data/       # Dados mockados (usuários, eventos, apresentações, etc.)
+│   │       ├── *.service.mock.ts # Serviços mockados
+│   │       ├── storage.ts  # Gerenciador de storage in-memory
+│   │       ├── helpers.ts  # Funções auxiliares para mocks
+│   │       └── index.ts    # Exportação dos mocks
+│   ├── config/             # Configurações da aplicação
+│   │   └── services.config.ts # Toggle automático mock/real baseado em .env
 │   ├── types/              # TypeScript interfaces e types
 │   │   ├── user.types.ts
 │   │   ├── presentation.types.ts
@@ -140,8 +244,11 @@ wepgcomp-frontend/
 ├── vite.config.ts          # Configuração Vite
 ├── tailwind.config.js      # Configuração Tailwind CSS
 ├── postcss.config.js       # Configuração PostCSS
+├── .env                    # Variáveis de ambiente (modo mock ativado)
+├── .env.example            # Exemplo de configuração de ambiente
 ├── .gitignore              # Arquivos ignorados pelo Git
 ├── README.md               # Este arquivo
+├── TESTING_GUIDE.md        # 📖 Guia completo de testes com dados mockados
 └── DEVELOPMENT_LOG.md      # Log de desenvolvimento e auto-avaliação
 ```
 
@@ -189,10 +296,24 @@ wepgcomp-frontend/
 
 ## Observações Importantes
 
-### Backend API
-Este é um projeto **front-end apenas**. Ele assume a existência de uma API RESTful back-end que fornece os endpoints necessários. Todos os serviços em `src/services/` fazem chamadas HTTP que devem ser implementadas no back-end.
+### Backend API e Dados Mockados
 
-A URL base da API pode ser configurada via variável de ambiente `VITE_API_URL` (padrão: `http://localhost:4000/api`).
+Este é um projeto **front-end** que pode operar em **dois modos**:
+
+#### Modo Mock (Padrão - Demonstração)
+- ✅ **Não requer backend** rodando
+- ✅ Dados completos para demonstração e testes
+- ✅ Simulação realista de API com latência configurável
+- ✅ Ideal para desenvolvimento front-end e apresentações
+- 📝 Configurado via `VITE_USE_MOCK_DATA=true`
+
+#### Modo API Real (Produção)
+- 🌐 Conecta a uma API RESTful back-end
+- 🔌 Requer backend rodando (padrão: `http://localhost:4000/api`)
+- 📝 Configurado via `VITE_USE_MOCK_DATA=false`
+- 🔧 URL da API configurável via `VITE_API_URL`
+
+**A transição entre modos é transparente** - os componentes não precisam saber qual modo está ativo.
 
 ### Desenvolvimento
 Este projeto foi desenvolvido com foco em:
@@ -203,10 +324,17 @@ Este projeto foi desenvolvido com foco em:
 - **Design responsivo mobile-first**
 - **Acessibilidade básica**
 
+### Arquivos de Documentação
+
+- **README.md** - Visão geral, setup e execução (este arquivo)
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Guia completo de testes com dados mockados
+- **DEVELOPMENT_LOG.md** - Log de desenvolvimento e auto-avaliação técnica
+
 ### Próximos Passos
 Para um projeto de produção, considere:
+- ✅ **Dados mockados completos** (já implementado)
 - Implementar todas as páginas administrativas (atualmente são placeholders)
-- Adicionar testes (Jest, React Testing Library)
+- Adicionar testes automatizados (Jest, React Testing Library)
 - Implementar i18n (internacionalização)
 - Adicionar mais validações e tratamento de erros
 - Implementar PWA features
