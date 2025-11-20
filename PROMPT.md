@@ -1,19 +1,29 @@
 **(1) Definição do Papel e Contexto:**
-Você atuará como um Engenheiro de Software Front-end Sênior, responsável pelo desenvolvimento completo da interface do usuário (UI) para o sistema WEPGCOMP.
+Você atuará como um Engenheiro de Software Front-end Sênior, responsável por desenvolver todo o front-end funcional do sistema WEPGCOMP, utilizando dados totalmente mockados (mock data + serviços simulados), permitindo que todas as funcionalidades possam ser testadas durante o deploy sem necessidade de back-end real.
 * **Projeto:** WEPGCOMP - Sistema web para gerenciamento de apresentações de doutorado do PGCOMP.
 * **Público:** Alunos Doutorandos, Professores, Ouvintes, Administradores (Super Admins, Coordenadores).
-* **Objetivo Principal:** Criar um front-end funcional, intuitivo, robusto, documentar o projeto (README.md) e registrar seu processo de desenvolvimento e auto-avaliação (DEVELOPMENT_LOG.md).
+* **Objetivo Principal:** Criar um front-end funcional e realista, documentar o projeto (README.md) e registrar seu processo de desenvolvimento e auto-avaliação (DEVELOPMENT_LOG.md).
+
+Não deve haver preparação para integração futura com back-end real. Toda lógica que dependeria de API deve ser implementada usando mocks estáticos, serviços fake internos, JSONs locais, armazenamento em memória local ou localStorage, simulação de latência, respostas mockadas completas e fluxos completos sem chamada real de rede. O objetivo é que todas as funcionalidades, telas, validações e fluxos funcionem imediatamente após o deploy, usando apenas os dados mockados.
 
 **(2) Instrução para Raciocínio Estruturado e Registro Inicial (CoT / Planejamento):**
 Antes de gerar qualquer código, crie um arquivo separado chamado `DEVELOPMENT_LOG.md`. Inicie este arquivo com uma seção `## 1. Plano de Ação e Raciocínio Inicial`. Nesta seção, descreva seu plano de ação detalhado. Inclua:
 * A stack tecnológica principal que você escolheu (Framework, Linguagem, Estilização) e uma breve justificativa inicial.
 * A estrutura geral de pastas que você planeja usar.
-* Sua estratégia para garantir a cobertura de todos os requisitos funcionais e a consideração dos não-funcionais relevantes.
+* Sua estratégia para garantir a cobertura de todos os requisitos funcionais e não-funcionais usando mock data.
+* Como serão organizados os serviços de mock e persistência.
 * Como você organizará os componentes da UI para atender aos diferentes perfis de usuário.
 *Pense passo a passo para garantir uma abordagem completa e registre esse pensamento neste arquivo.*
 
 **(3) Tarefa Central e Requisitos Completos:**
-Sua tarefa principal é gerar o código-fonte completo e funcional para o **front-end** do WEPGCOMP, baseado **estritamente e completamente** nos seguintes requisitos, e registrar as etapas subsequentes e auto-avaliações no `DEVELOPMENT_LOG.md`, além de criar um `README.md` padrão.
+Sua tarefa principal é gerar o código-fonte completo e funcional para o **front-end** do WEPGCOMP, implementado a partir de dados mockados, baseado **estritamente e completamente** nos seguintes requisitos, e registrar as etapas subsequentes e auto-avaliações no `DEVELOPMENT_LOG.md`, além de criar um `README.md` padrão.
+
+**Diretrizes específicas para mock data:**
+* Nenhuma chamada real ou simulada a API REST deve existir.
+* Toda função de serviço deve retornar mock data, simular delays, armazenar alterações em memória local, ter comentários descrevendo como o dado seria processado em um projeto real.
+* Toda funcionalidade que dependeria de back-end deve ser simulada completamente.
+* Essas simulações devem permitir login, criação de usuários, controle de permissões, criação e edição de apresentações, votações, geração de listas e rankings, criação de edições de eventos, etc.
+* Se algo não puder ser representado 100% no front-end, você deve simular o fluxo, mostrar uma mensagem de confirmação e registrar como “Parcialmente implementado (simulado com mock)” no DEVELOPMENT_LOG.md.
 
 * **Requisitos Funcionais (FUNC):**
     * FUNC01 O sistema deve permitir que professores e doutorandos do PGCOMP se cadastrem usando e-mail UFBA, matrícula e senha forte para acessar o sistema de forma segura.
@@ -67,7 +77,7 @@ Sua tarefa principal é gerar o código-fonte completo e funcional para o **fron
 **(4) Diretrizes Técnicas e de Qualidade:**
 * **Stack Tecnológica:** Use um framework front-end moderno (React, Vue, Angular, Svelte), TypeScript (preferencial) ou JavaScript, e uma abordagem de estilização moderna. Se escolher algo diferente, justifique detalhadamente no `DEVELOPMENT_LOG.md`.
 * **Qualidade do Código:** Gere código limpo, legível, modular (componentizado), seguindo os padrões e melhores práticas da comunidade para a stack escolhida. Minimize duplicação e complexidade desnecessária. Inclua comentários claros no código para explicar lógica complexa ou decisões não óbvias (foco no *porquê*).
-* **Back-end:** Assuma uma API RESTful hipotética para interações com o servidor. O design do front-end deve refletir chamadas a essa API para operações CRUD e outras lógicas de negócio. Não implemente o back-end.
+* **Back-end:** Não implemente o back-end. Aqui não existe API REST, nem placeholders para futura integração, somente mock serviços internos, que representam toda a lógica.
 
 **(5) Especificação Detalhada das Saídas Esperadas (Código + README + DEVELOPMENT_LOG):**
 Sua saída final deve consistir em três partes principais:
@@ -87,7 +97,7 @@ Sua saída final deve consistir em três partes principais:
 **Parte 3: Arquivo `DEVELOPMENT_LOG.md`**
 * Este arquivo deve documentar seu processo e auto-avaliação. Crie-o com as seguintes seções:
     * `## DEVELOPMENT LOG - WEPGCOMP Front-end`
-    * `### 1. Plano de Ação e Raciocínio Inicial` (Conforme gerado na Seção 2 deste prompt)
+    * `### 1. Plano de Ação e Raciocínio Inicial` 
     * `### 2. Justificativa Detalhada da Escolha da Stack Tecnológica` (Explicação completa relacionando com requisitos)
     * `### 3. Métricas de Auto-Avaliação`
         * `#### 3.1 Tempo Estimado de Desenvolvimento` (Indique o tempo total em horas ou minutos)
@@ -99,6 +109,8 @@ Após detalhar o plano no `DEVELOPMENT_LOG.md` (seção 1), gere o código-fonte
 
 **(7) Instruções Finais:**
 * Sua resposta final deve ser o **código-fonte completo**, o **arquivo README.md completo** e o **arquivo DEVELOPMENT_LOG.md completo**, conforme especificado.
-* Se um requisito não puder ser totalmente implementado apenas no front-end (ex: envio real de email), implemente a interface correspondente, adicione um comentário no código indicando a dependência do back-end, e registre isso como `Parcialmente Implementado` com justificativa no `DEVELOPMENT_LOG.md`.
+* Qualquer requisito dependente de servidor deve ser totalmente simulado usando mock data.
+* Nunca criar endpoints, URLs ou preparar integração futura.
+* O front-end deve funcionar imediatamente após instalação e deploy.
 
 **Pode começar.**
