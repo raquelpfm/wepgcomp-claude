@@ -110,7 +110,7 @@ export const userService = {
    * Concede ou revoga permissões
    * FUNC08, FUNC10, FUNC11, FUNC12, FUNC13, FUNC14, FUNC15
    */
-  grantPermissions: async (dto: GrantPermissionsDTO, granterId: string): Promise<User> => {
+  grantPermissions: async (dto: GrantPermissionsDTO, _granterId: string): Promise<User> => {
     await delay(300);
 
     const { userId, isSuperAdmin, isAdmin, isCoordinator, coordinatorOfEventId } = dto;

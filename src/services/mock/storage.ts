@@ -134,7 +134,7 @@ export class MockStorage {
    * Exporta todos os dados para backup
    */
   static exportData(): string {
-    const data: Record<string, any> = {};
+    const data: Record<string, unknown> = {};
     const keys = Object.keys(localStorage);
 
     keys.forEach(key => {

@@ -2,6 +2,8 @@
  * Tipos relacionados a eventos e sessões
  */
 
+import type { Presentation } from './presentation.types';
+
 export interface Event {
   id: string;
   name: string; // Ex: "WEPGCOMP 2024"
@@ -110,7 +112,7 @@ export interface Schedule {
   event: Event;
   sessions: Session[];
   presentations: Array<{
-    presentation: any; // Presentation type
+    presentation: Presentation;
     session?: Session;
   }>;
 }
@@ -137,7 +139,7 @@ export interface HomePageInfo {
     date: string;
     sessions: Array<{
       session: Session;
-      presentations: any[]; // Presentation[]
+      presentations: Presentation[];
     }>;
   }[];
   contact: {

@@ -3,12 +3,11 @@
  */
 
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 export const formatDate = (dateString: string): string => {
   try {
     const date = parseISO(dateString);
-    return format(date, 'dd/MM/yyyy', { locale: ptBR });
+    return format(date, 'dd/MM/yyyy');
   } catch {
     return dateString;
   }
@@ -17,7 +16,7 @@ export const formatDate = (dateString: string): string => {
 export const formatDateTime = (dateString: string): string => {
   try {
     const date = parseISO(dateString);
-    return format(date, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+    return format(date, "dd/MM/yyyy 'às' HH:mm");
   } catch {
     return dateString;
   }
